@@ -34,8 +34,6 @@ router.route(`/seats`).post((req, res) => {
 		db.seats.push(newSeat);
 		res.status(200).json({
 			message: 'OK',
-			isSeatTaken,
-			condition: parseInt(db.seats[0].seat) === parseInt(seat),
 		});
 	}
 });

@@ -26,47 +26,51 @@ export const loadConcerts = payload => ({ payload, type: LOAD_CONCERTS });
 /* THUNKS */
 
 export const loadConcertsRequest = () => {
-  return async dispatch => {
-
-    dispatch(startRequest());
-    try {
-
-      let res = await axios.get(`${API_URL}/concerts`);
-      await new Promise((resolve, reject) => setTimeout(resolve, 2000));
-      dispatch(loadConcerts(res.data));
-      dispatch(endRequest());
-
-    } catch(e) {
-      dispatch(errorRequest(e.message));
-    }
-
-  };
+	return async dispatch => {
+		dispatch(startRequest());
+		try {
+			let res = await axios.get(`${API_URL}/concerts`);
+			dispatch(loadConcerts(res.data));
+			dispatch(endRequest());
+		} catch (e) {
+			dispatch(errorRequest(e.message));
+		}
+	};
 };
 
 /* INITIAL STATE */
 
 const initialState = {
-  data: [],
-  request: {
-    pending: false,
-    error: null,
-    success: null,
-  },
+	data: [],
+	request: {
+		pending: false,
+		error: null,
+		success: null,
+	},
 };
 
 /* REDUCER */
 
 export default function reducer(statePart = initialState, action = {}) {
-  switch (action.type) {
-    case LOAD_CONCERTS: 
-      return { ...statePart, data: [...action.payload] };
-    case START_REQUEST:
-      return { ...statePart, request: { pending: true, error: null, success: false } };
-    case END_REQUEST:
-      return { ...statePart, request: { pending: false, error: null, success: true } };
-    case ERROR_REQUEST:
-      return { ...statePart, request: { pending: false, error: action.error, success: false } };
-    default:
-      return statePart;
-  }
+	switch (action.type) {
+		case LOAD_CONCERTS:
+			return { ...statePart, data: [...action.payload] };
+		case START_REQUEST:
+			return {
+				...statePart,
+				request: { pending: true, error: null, success: false },
+			};
+		case END_REQUEST:
+			return {
+				...statePart,
+				request: { pending: false, error: null, success: true },
+			};
+		case ERROR_REQUEST:
+			return {
+				...statePart,
+				request: { pending: false, error: action.error, success: false },
+			};
+		default:
+			return statePart;
+	}
 }
