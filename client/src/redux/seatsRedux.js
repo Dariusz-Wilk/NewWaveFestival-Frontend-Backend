@@ -48,7 +48,13 @@ export const addSeatRequest = seat => {
 			dispatch(addSeat(res));
 			dispatch(endRequest({ name: 'ADD_SEAT' }));
 		} catch (e) {
-			dispatch(errorRequest({ name: 'ADD_SEAT', error: e.message }));
+			dispatch(
+				errorRequest({
+					name: 'ADD_SEAT',
+					error:
+						e.message + '\n This seat is already taken, choose another one',
+				})
+			);
 		}
 	};
 };
