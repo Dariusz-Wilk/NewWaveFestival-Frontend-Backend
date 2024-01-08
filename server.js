@@ -10,10 +10,13 @@ const testimonialsRoutes = require('./routes/testimonials.routes');
 const concertsRoutes = require('./routes/concerts.routes');
 const seatsRoutes = require('./routes/seats.routes');
 
-mongoose.connect('mongodb://0.0.0.0:27017/newWaveDB', {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
+mongoose.connect(
+	'mongodb+srv://dariuszwilk1993:fZX6zTbJjmw9qZYD@cluster0.nazijyh.mongodb.net/newWaveDB?retryWrites=true&w=majority',
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	}
+);
 const db = mongoose.connection;
 
 db.once('open', () => {
