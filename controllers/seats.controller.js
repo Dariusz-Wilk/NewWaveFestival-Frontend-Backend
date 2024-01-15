@@ -1,4 +1,6 @@
+const sanitize = require('mongo-sanitize');
 const Seat = require('../models/seat.model');
+const mongoSanitize = require('mongo-sanitize');
 
 exports.getAllSeats = async (req, res) => {
 	try {
@@ -21,13 +23,20 @@ exports.getSeatsById = async (req, res) => {
 exports.addNewSeats = async (req, res) => {
 	try {
 		const { day, seat, client, email } = req.body;
+		const cleanedClient = mongoSanitize(client);
+		const cleanedEmail = mongoSanitize(email);
 
 		const isSeatTaken = await Seat.findOne({ seat, day });
 
 		if (isSeatTaken) {
 			return res.status(409).json({ error: 'Seat is already taken' });
 		} else {
-			const newSeat = new Seat({ day, seat, client, email });
+			const newSeat = new Seat({
+				day,
+				seat,
+				client: cleanedClient,
+				email: cleanedEmail,
+			});
 			await newSeat.save();
 			const seats = await Seat.find();
 			req.io.emit('seatsUpdated', seats);

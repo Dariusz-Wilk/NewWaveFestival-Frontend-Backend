@@ -3,21 +3,24 @@ const cors = require('cors');
 const path = require('path');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 const app = express();
+
+app.use(helmet());
 
 const testimonialsRoutes = require('./routes/testimonials.routes');
 const concertsRoutes = require('./routes/concerts.routes');
 const seatsRoutes = require('./routes/seats.routes');
 
-mongoose.connect(
-	// 'mongodb+srv://dariuszwilk1993:fZX6zTbJjmw9qZYD@cluster0.nazijyh.mongodb.net/newWaveDB?retryWrites=true&w=majority',
-	'mongodb://0.0.0.0:27017/newWaveDB',
-	{
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	}
-);
+const NODE_ENV = process.env.NODE_ENV;
+let dbUri = '';
+
+if (NODE_ENV === 'production')
+	dbUri = `mongodb+srv://dariuszwilk1993:${process.env.DB_PASS}@cluster0.nazijyh.mongodb.net/newWaveDB?retryWrites=true&w=majority`;
+else dbUri = 'mongodb://0.0.0.0:27017/newWaveDB';
+
+mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
